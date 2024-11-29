@@ -23,6 +23,19 @@ def get_person_winrate(account_id, hero_id, patch_id=None):
         print(req.status_code)
         return None, None
 
+# def get_person_winrate_new(account_id, hero_id, patch_id=None, match_date_time):
+#     params = {'date': 300, 'hero_id': hero_id}
+#     if patch_id:
+#         params['patch'] = patch_id
+#     req = requests.get(f'https://api.opendota.com/api/players/{account_id}/wl', params=params)
+#     if req.status_code == 200:
+#         cnt_win = req.json()['win']
+#         cnt_lose = req.json()['lose']
+#         return cnt_win, cnt_lose
+#     else:
+#         print(req.status_code)
+#         return None, None
+
 
 def get_match_patch(match_id):
     req = requests.get(f'https://api.opendota.com/api/matches/{match_id}')
