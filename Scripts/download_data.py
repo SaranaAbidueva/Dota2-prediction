@@ -4,7 +4,7 @@ import shutil
 import os
 
 
-def get_date():
+def get_month():
     today = date.today()
     return today.strftime("%Y%m")
 
@@ -20,5 +20,5 @@ def download_data():
         shutil.copy(dataset_path, tgt_directory)
 
 
-dt = get_date()
+dt = get_month()
 download_data()
