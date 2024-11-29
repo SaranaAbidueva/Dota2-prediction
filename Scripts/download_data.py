@@ -3,6 +3,7 @@ from datetime import date
 import shutil
 import os
 
+
 def get_date():
     today = date.today()
     return today.strftime("%Y%m")

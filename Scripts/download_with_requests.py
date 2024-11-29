@@ -18,10 +18,7 @@ def get_person_winrate(account_id, hero_id, patch_id=None):
     if req.status_code == 200:
         cnt_win = req.json()['win']
         cnt_lose = req.json()['lose']
-        cnt_games = cnt_win + cnt_lose
-        win_rate = round(cnt_win/cnt_games, 2)
-        req = requests.get(f'https://api.opendota.com/api/players/{account_id}')
-        return win_rate, cnt_games
+        return cnt_win, cnt_lose
     else:
         print(req.status_code)
         return None, None
