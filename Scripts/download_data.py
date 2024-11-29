@@ -9,12 +9,12 @@ def get_date():
 
 
 def download_data():
-    files_to_download = ['players', 'picks_bans', 'teams', 'main_metadata']
+    files_to_download = ['draft_timings', 'teams', 'main_metadata', 'players']
     dataset_url = f"bwandowando/dota-2-pro-league-matches-2023"
+    tgt_directory = f'D:/projects/DOTA2 Prediction/data/{dt}'
+    if not os.path.exists(tgt_directory):
+        os.makedirs(tgt_directory)
     for file in files_to_download:
-        tgt_directory = f'data/{dt}'
-        if not os.path.exists(tgt_directory):
-            os.makedirs(tgt_directory)
         dataset_path = kagglehub.dataset_download(dataset_url, path=f'{dt}/{file}.csv')
         shutil.copy(dataset_path, tgt_directory)
 
