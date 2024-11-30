@@ -16,10 +16,11 @@ df = df.dropna()
 y = df['radiant_win']
 X = df.drop(['match_id', 'radiant_win', 'radiant.name', 'dire.name', 'start_date_time'], axis=1)
 
-hero_columns = [f'radiant.{i}_hero' for i in range(1, 6)]
-hero_columns += [f'radiant.{i}_account_id' for i in range(1, 6)]
-hero_columns += [f'dire.{i}_hero' for i in range(1, 6)]
-hero_columns += [f'dire.{i}_account_id' for i in range(1, 6)]
+hero_columns = []
+for side in ['radiant', 'dire']:
+    hero_columns += [f'{side}.{i}_hero' for i in range(1, 6)]
+    hero_columns += [f'{side}.{i}_account_id' for i in range(1, 6)]
+    hero_columns += [f'{side}.{i}_rank_tier' for i in range(1, 6)]
 cat_features = ['patch', 'radiant.team_id', 'dire.team_id'] + hero_columns
 num_features = [x for x in X.columns if x not in cat_features]
 

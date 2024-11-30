@@ -61,7 +61,7 @@ def get_person_winrate_new(account_id, hero_id, match_date_time, patch_id=None, 
 def download_player_data(account_id):
     """
     :param account_id:
-    :return: list of dicts: {'account_id', 'start_time, 'win', 'patch'}
+    :return: list of dicts: {'account_id', 'hero_id', 'start_time, 'win', 'patch'}
     """
     params = {'date': 100}
     req = requests.get(f'https://api.opendota.com/api/players/{account_id}/matches', params=params)
@@ -98,7 +98,7 @@ def download_all_players_data():
         matches_list_all += matches_account
         if i % 10 == 0:
             df = pd.DataFrame(matches_list_all)
-            df.to_csv(f'{root}/data/{dt}/my_player_matches.csv')
+            df.to_csv(f'{root}/data/{dt}/player_matches.csv')
             time.sleep(10)
 
 

@@ -12,7 +12,7 @@ df_picks = pd.read_csv(f'{root}/data/{dt}/draft_timings.csv')
 df_teams = pd.read_csv(f'{root}/data/{dt}/teams.csv')
 df_main = pd.read_csv(f'{root}/data/{dt}/main_metadata.csv')  # PK: match_id
 df_players = pd.read_csv(f'{root}/data/{dt}/players.csv')
-df_players_matches = pd.read_csv(f'{root}/data/{dt}/my_player_matches.csv')
+df_players_matches = pd.read_csv(f'{root}/data/{dt}/player_matches.csv')
 df_players_matches['date'] = pd.to_datetime(df_players_matches['date'], format='%Y-%m-%d')
 
 
@@ -20,7 +20,7 @@ def head(df):
     print(tabulate(df.head(), headers='keys'))
 
 
-df_all = pd.merge(df_main[['match_id', 'radiant_win', 'start_date_time', 'patch']], df_teams[['match_id', 'radiant.team_id', 'radiant.name', 'dire.team_id', 'dire.name']], on='match_id')
+df_all = pd.merge(df_main[['match_id', 'radiant_win', 'start_date_time', 'patch', 'league_id']], df_teams[['match_id', 'radiant.team_id', 'radiant.name', 'dire.team_id', 'dire.name']], on='match_id')
 print(len(df_all))
 head(df_all)
 
@@ -48,7 +48,7 @@ def get_person_winrate(account_id, hero_id, match_date_time, days=100, patch_id=
 player_info_list = []
 for i, row in tqdm(df_all.iterrows()):
     match_id = row['match_id']
-    match_players = df_players[df_players['match_id'] == match_id][['match_id', 'hero_id', 'account_id', 'player_slot']].drop_duplicates()
+    match_players = df_players[df_players['match_id'] == match_id][['match_id', 'hero_id', 'account_id', 'player_slot', 'rank_tier']].drop_duplicates()
     print(len(match_players))
     head(match_players)
     patch = row['patch']
@@ -62,6 +62,7 @@ for i, row in tqdm(df_all.iterrows()):
         match_date_time = row['start_date_time']
         match_players_dict[f'{side}.{pos}_account_id'] = player['account_id']
         match_players_dict[f'{side}.{pos}_hero'] = player['hero_id']
+        match_players_dict[f'{side}.{pos}_rank_tier'] = player['rank_tier']
         match_players_dict[f'{side}.{pos}_hero_win'], match_players_dict[f'{side}.{pos}_hero_lose'] = get_person_winrate(account_id, hero_id, match_date_time)
         match_players_dict[f'{side}.{pos}_hero_win_patch'], match_players_dict[f'{side}.{pos}_hero_lose_patch'] = get_person_winrate(account_id, hero_id, match_date_time, patch_id=patch)
     player_info_list.append(match_players_dict)
