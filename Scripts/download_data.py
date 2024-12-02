@@ -10,7 +10,7 @@ def get_month():
 
 
 def download_data():
-    files_to_download = ['draft_timings', 'teams', 'main_metadata', 'players']
+    files_to_download = ['teams', 'main_metadata', 'players']
     dataset_url = f"bwandowando/dota-2-pro-league-matches-2023"
     tgt_directory = f'D:/projects/DOTA2 Prediction/data/{dt}'
     if not os.path.exists(tgt_directory):
@@ -21,4 +21,4 @@ def download_data():
 
 
 dt = get_month()
-download_data()
+# download_data()

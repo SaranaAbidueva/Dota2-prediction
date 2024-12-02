@@ -61,7 +61,7 @@ def get_person_winrate_new(account_id, hero_id, match_date_time, patch_id=None, 
 def download_player_data(account_id):
     """
     :param account_id:
-    :return: list of dicts: {'account_id', 'hero_id', 'start_time, 'win', 'patch'}
+    :return: list of dicts: {'account_id', 'hero_id', 'start_time, 'win', 'patch', 'hero_variant'}
     """
     params = {'date': 100}
     req = requests.get(f'https://api.opendota.com/api/players/{account_id}/matches', params=params)
@@ -75,7 +75,8 @@ def download_player_data(account_id):
             # TODO: NEED TO GET PATCH OTHERWISE, maybe function get_match_patch. but its one more call
             patch = 56
             hero_id = match['hero_id']
-            match_dct = {'account_id': account_id, 'hero_id': hero_id, 'date': date, 'win': win, 'patch': patch}
+            hero_variant = match['hero_variant']
+            match_dct = {'account_id': account_id, 'hero_id': hero_id, 'date': date, 'win': win, 'patch': patch, 'hero_variant': hero_variant}
             matches_list.append(match_dct)
         return matches_list
     else:
@@ -88,17 +89,20 @@ def download_all_players_data():
     downloads matches of all players in 202411 folder for the past 100 days to csv
     """
     root = 'D:/projects/DOTA2 Prediction'
-    dt = get_month()
+    # dt = get_month()
+    dt = '202411'
     df_players = pd.read_csv(f'{root}/data/{dt}/players.csv')
     players_lst = df_players['account_id'].unique().astype(int)
     print('players count: ', len(players_lst))
     matches_list_all = []
     for i, account_id in enumerate(tqdm(players_lst)):
+        if i < 1449:
+            continue
         matches_account = download_player_data(account_id)
         matches_list_all += matches_account
         if i % 10 == 0:
             df = pd.DataFrame(matches_list_all)
-            df.to_csv(f'{root}/data/{dt}/player_matches.csv')
+            df.to_csv(f'{root}/data/{dt}/player_matches_history2.csv')
             time.sleep(10)
 
 
