@@ -3,6 +3,7 @@ import numpy as np
 from catboost import CatBoostClassifier, Pool, FeaturesData
 # from sklearn.model_selection import TimeSeriesSplit
 from sklearn.model_selection import train_test_split
+from tabulate import tabulate
 
 root = 'D:/projects/DOTA2 Prediction'
 df = pd.read_csv(f'{root}/data/collected_data.csv')
@@ -11,14 +12,18 @@ df['start_date_time'] = df['start_date_time'].str.split(' ').str.get(0)
 df['day'] = df['start_date_time'].str.split('-').str.get(2)
 df['month'] = df['start_date_time'].str.split('-').str.get(1)
 
+print(df.describe())
+print(df.isna())
+print(len(df))
 df = df.dropna()
-
+print(len(df))
 y = df['radiant_win']
 X = df.drop(['match_id', 'radiant_win', 'radiant.name', 'dire.name', 'start_date_time'], axis=1)
 
 hero_columns = []
 for side in ['radiant', 'dire']:
     hero_columns += [f'{side}.{i}_hero' for i in range(1, 6)]
+    hero_columns += [f'{side}.{i}_hero_variant' for i in range(1, 6)]
     hero_columns += [f'{side}.{i}_account_id' for i in range(1, 6)]
     hero_columns += [f'{side}.{i}_rank_tier' for i in range(1, 6)]
 cat_features = ['patch', 'radiant.team_id', 'dire.team_id'] + hero_columns
@@ -47,9 +52,6 @@ y_test = np.array(y_test, dtype=bool)
 # catboost.fit(train_features, y_train)
 # train_pool = Pool(X_train, y_train, cat_features=cat_features)
 # test_pool = Pool(X_test, y_test, cat_features=cat_features)
-
-print(y_train)
-print(y_test)
 
 train_pool = Pool(data=train_features, label=y_train)
 test_pool = Pool(data=test_features, label=y_test)
