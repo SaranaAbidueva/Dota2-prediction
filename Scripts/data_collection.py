@@ -25,7 +25,6 @@ df_all = pd.merge(df_main[['match_id', 'radiant_win', 'start_date_time', 'patch'
 print(len(df_all))
 head(df_all)
 
-# df_all = df_all.head(7)
 
 
 def get_person_winrate(account_id, hero_id, hero_variant, match_date_time, days=100, patch_id=None):
