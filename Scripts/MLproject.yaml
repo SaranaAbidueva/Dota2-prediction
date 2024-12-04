@@ -1,0 +1,14 @@
+name: Predict DoTA 2 match result.
+
+python_env: python_env.yaml
+
+entry points:
+  data-downloading:
+    command: "python download_data.py"
+  data-collecting:
+    parameters:
+      root: { type: str, default: 'D:\projects\DOTA2 Prediction'}
+      year_month: {type: str, default: '202411'}
+    command: "python data_collection.py"
+  model-training:
+    command: "python preparing_data_to_train.py"

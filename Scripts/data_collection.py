@@ -1,18 +1,30 @@
 import pandas as pd
-from download_data import get_month
 from tabulate import tabulate
-# from download_with_requests import get_person_winrate_new
 from tqdm import tqdm
-import time
 from datetime import datetime
+from loguru import logger
+import sys
+import warnings
+import argparse
+from config import config
 
-# dt = get_month()
-dt = '202411'
-root = 'D:/projects/DOTA2 Prediction'
-df_teams = pd.read_csv(f'{root}/data/{dt}/teams.csv')
-df_main = pd.read_csv(f'{root}/data/{dt}/main_metadata.csv')  # PK: match_id
-df_players = pd.read_csv(f'{root}/data/{dt}/players.csv')
-df_players_matches = pd.read_csv(f'{root}/data/{dt}/player_matches_history.csv')
+# set up logging
+# logger.remove()
+logger.add(sys.stdout, format="{time:YYYY-MM-DD HH:mm:ss} | {level} | {message}")
+warnings.filterwarnings('ignore')
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--year_month", default=config.default_year_month, type=str)
+DT = parser.parse_args().year_month
+
+parser.add_argument("--root", default=config.default_root, type=str)
+root = parser.parse_args().root
+logger.info(f'Data collecting from: {root}/data/{DT}')
+
+df_teams = pd.read_csv(f'{root}/data/{DT}/teams.csv')
+df_main = pd.read_csv(f'{root}/data/{DT}/main_metadata.csv')  # PK: match_id
+df_players = pd.read_csv(f'{root}/data/{DT}/players.csv')
+df_players_matches = pd.read_csv(f'{root}/data/{DT}/player_matches_history.csv')
 df_players_matches['date'] = pd.to_datetime(df_players_matches['date'], format='%Y-%m-%d')
 df_ratings = pd.read_csv(f'{root}/data/players_leaderboard_ranks.csv')
 
@@ -22,9 +34,8 @@ def head(df):
 
 
 df_all = pd.merge(df_main[['match_id', 'radiant_win', 'start_date_time', 'patch', 'leagueid']], df_teams[['match_id', 'radiant.team_id', 'radiant.name', 'dire.team_id', 'dire.name']], on='match_id')
-print(len(df_all))
 head(df_all)
-
+print('number of rows', len(df_all))
 
 
 def get_person_winrate(account_id, hero_id, hero_variant, match_date_time, days=100, patch_id=None):
@@ -78,3 +89,4 @@ player_df = pd.DataFrame(player_info_list)
 
 df_all = pd.merge(df_all, player_df, on='match_id')
 df_all.to_csv(f'{root}/data/collected_data.csv', index=False)
+logger.info(f'Created {root}/data/collected_data.csv')
