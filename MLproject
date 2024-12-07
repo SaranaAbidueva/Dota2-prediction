@@ -1,0 +1,18 @@
+name: Predict DotA 2 match result.
+
+python_env: python_env.yaml
+
+entry_points:
+  data-downloading:
+    command: "python Scripts/data_downloading.py"
+  data-collecting:
+    parameters:
+      root: { type: str, default: 'D:\projects\DOTA2 Prediction'}
+      year_month: {type: str, default: '202411'}
+    command: "python Scripts/data_collecting.py"
+  data-preprocessing:
+    command: "python Scripts/data_preprocessing.py"
+  hyperparameter-tuning:
+    command: "python Scripts/hyperparameter_tuning.py"
+  train-best-model:
+    command: "python Scripts/train_best_model.py"

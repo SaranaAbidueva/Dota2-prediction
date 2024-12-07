@@ -2,3 +2,5 @@ kaggle.json
 data/*
 venv/*
 Scripts/catboost_info/*
+catboost_info/*
+mlruns/*
