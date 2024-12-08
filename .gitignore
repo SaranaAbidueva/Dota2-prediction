@@ -1,6 +1,6 @@
 kaggle.json
 data/*
-venv/*
 Scripts/catboost_info/*
+Scripts/mlruns/*
 catboost_info/*
 mlruns/*
