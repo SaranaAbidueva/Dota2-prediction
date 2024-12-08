@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from Scripts.make_prediction import pred
+from make_prediction import pred
 
 
 st.title('Predict Dota 2 Pro league game')
