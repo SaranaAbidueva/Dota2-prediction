@@ -6,7 +6,7 @@ st.title('Predict Dota 2 Pro league game')
 st.text_input("Radiant team name", key="radiant_name")
 st.text_input("Dire team name", key="dire_name")
 
-df = pd.read_csv('Constants.Heroes.csv')
+df = pd.read_csv('./deploy/Constants.Heroes.csv')
 df['name_short'] = df['name'].apply(lambda x: x[14:])
 
 # Select box for heroes
