@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from make_prediction import pred
+# from make_prediction import pred
 
 
 st.title('Predict Dota 2 Pro league game')
@@ -18,5 +18,5 @@ for side in ['Radiant', 'Dire']:
         option = st.selectbox(f'{side} pos{i} hero variant', list(range(1, 6)), key=f"{side}.{i}_hero_variant")
 
 st.write('The winner probabilities:')
-st.write(pred)
+# st.write(pred)
 
