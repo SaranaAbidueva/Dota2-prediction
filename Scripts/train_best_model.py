@@ -2,7 +2,7 @@ import mlflow
 import tempfile
 import pandas as pd
 import os
-from catboost import CatBoostClassifier, Pool, FeaturesData, cv
+from catboost import CatBoostClassifier, Pool, FeaturesData
 import numpy as np
 
 
@@ -14,7 +14,9 @@ def get_cat_features(X):
         hero_columns += [f'{side}.{i}_account_id' for i in range(1, 6)]
         hero_columns += [f'{side}.{i}_rank_tier' for i in range(1, 6)]
     cat_features = ['patch', 'radiant.team_id', 'dire.team_id'] + hero_columns
+    cat_features = cat_features.sort(reverse=True)
     num_features = [x for x in X.columns if x not in cat_features]
+    num_features = num_features.sort(reverse=True)
     return cat_features, num_features
 
 
@@ -44,7 +46,6 @@ with mlflow.start_run() as run:
         # convert to Pool format
     features = [i for i in train.columns if i != 'target']
     cat_features, num_features = get_cat_features(train[features])
-    cat_indexes = get_cat_features(train[features])
     train_features = FeaturesData(
         num_feature_data=np.array(train[num_features], dtype=np.float32),
         cat_feature_data=np.array(np.array(np.array(train[cat_features], dtype=int), dtype=str), dtype=object) # don't ask me wtf is this...
@@ -74,4 +75,7 @@ with mlflow.start_run() as run:
     mlflow.log_metric("BalancedAccuracy", metrics['BalancedAccuracy'][-1])
     print(model.get_feature_importance(data=train_dataset, prettified=True))
     print([x for x in enumerate(num_features + cat_features)])
-    mlflow.catboost.log_model(model, 'catboost')
+    mlflow.catboost.log_model(model, 'model')
+
+    model_uri = f"runs:/{run.info.run_id}/model"
+    mlflow.register_model(model_uri, 'catboost')

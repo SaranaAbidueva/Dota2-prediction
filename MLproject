@@ -16,3 +16,5 @@ entry_points:
     command: "python Scripts/hyperparameter_tuning.py"
   train-best-model:
     command: "python Scripts/train_best_model.py"
+  make-prediction:
+    command: "python Scripts/make_prediction.py"

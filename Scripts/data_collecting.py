@@ -26,7 +26,6 @@ df_main = pd.read_csv(f'{root}/data/{DT}/main_metadata.csv')  # PK: match_id
 df_players = pd.read_csv(f'{root}/data/{DT}/players.csv')
 df_players_matches = pd.read_csv(f'{root}/data/{DT}/player_matches_history.csv')
 df_players_matches['date'] = pd.to_datetime(df_players_matches['date'], format='%Y-%m-%d')
-df_ratings = pd.read_csv(f'{root}/data/players_leaderboard_ranks.csv')
 
 
 def head(df):
@@ -52,15 +51,6 @@ def get_person_winrate(account_id, hero_id, hero_variant, match_date_time, days=
     return cnt_win, cnt_lose
 
 
-# problem: raiting is from one moment of time.
-def get_person_raiting(account_id):
-    df_account_raiting = df_ratings[df_ratings['account_id'] == account_id]
-    if not df_account_raiting.empty:
-        raiting = df_account_raiting.iloc[0]['leaderboard_rank']
-    else:
-        raiting = None
-    return raiting
-
 # get info about players.
 player_info_list = []
 for i, row in tqdm(df_all.iterrows()):
@@ -79,8 +69,6 @@ for i, row in tqdm(df_all.iterrows()):
         match_players_dict[f'{side}.{pos}_account_id'] = player['account_id']
         match_players_dict[f'{side}.{pos}_hero'] = player['hero_id']
         match_players_dict[f'{side}.{pos}_hero_variant'] = hero_variant
-        match_players_dict[f'{side}.{pos}_rank_tier'] = player['rank_tier']
-        match_players_dict[f'{side}.{pos}_leaderboard_rank'] = get_person_raiting(player['account_id'])
         match_players_dict[f'{side}.{pos}_hero_win'], match_players_dict[f'{side}.{pos}_hero_lose'] = get_person_winrate(account_id, hero_id, hero_variant, match_date_time)
         match_players_dict[f'{side}.{pos}_hero_win_patch'], match_players_dict[f'{side}.{pos}_hero_lose_patch'] = get_person_winrate(account_id, hero_id, hero_variant, match_date_time, patch_id=patch)
     player_info_list.append(match_players_dict)

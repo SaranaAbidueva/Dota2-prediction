@@ -1,6 +1,6 @@
 import pandas as pd
 import requests
-from datetime import datetime, date
+from datetime import datetime
 from tqdm import tqdm
 import time
 
@@ -72,23 +72,5 @@ class APIHandler:
                 df.to_csv(f'{self.root}/data/{dt}/player_matches_history2.csv')
                 time.sleep(10)
 
-    def get_rank_leaderboard(self):
-        df_players = pd.read_csv(f'{self.root}/data/{self.yearmonth}/players.csv')
-        players_lst = df_players['account_id'].unique().astype(int)
-        lst = []
-        for i, account_id in enumerate(tqdm(players_lst)):
-            req = requests.get(f'{self.primary_url}/players/{account_id}')
-            ans = req.json()
-            if 'leaderboard_rank' in ans:
-                leaderboard_rank = ans['leaderboard_rank']
-            else:
-                leaderboard_rank = None
-            rank_tier = ans['rank_tier']
-            lst.append({'account_id': account_id, 'leaderboard_rank': leaderboard_rank, 'rank_tier': rank_tier})
-            if i % 20 == 0:
-                df = pd.DataFrame(lst)
-                df.to_csv(f'{self.root}/data/players_leaderboard_ranks.csv', index=False)
-                time.sleep(20)
 
 
-api_handler = APIHandler(yearmonth='202411')
