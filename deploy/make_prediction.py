@@ -12,7 +12,7 @@ def get_cat_features(X):
         hero_columns += [f'{side}.{i}_hero' for i in range(1, 6)]
         hero_columns += [f'{side}.{i}_hero_variant' for i in range(1, 6)]
         hero_columns += [f'{side}.{i}_account_id' for i in range(1, 6)]
-        hero_columns += [f'{side}.{i}_rank_tier' for i in range(1, 6)]
+        # hero_columns += [f'{side}.{i}_rank_tier' for i in range(1, 6)]
     cat_features = ['patch', 'radiant.team_id', 'dire.team_id'] + hero_columns
     num_features = [x for x in X.columns if x not in cat_features]
     return cat_features, num_features

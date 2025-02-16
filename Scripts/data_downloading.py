@@ -9,7 +9,7 @@ from config import config
 from API_handler import APIHandler
 
 
-def download_from_kaggle():
+def download_from_kaggle(root: str, DT: str):
     files_to_download = ['teams', 'main_metadata', 'players']
     dataset_url = f"bwandowando/dota-2-pro-league-matches-2023"
     tgt_directory = f'{root}/data/{DT}'
@@ -34,9 +34,9 @@ parser.add_argument("--root", default=config.default_root, type=str)
 root = parser.parse_args().root
 logger.info(f'Start downloading data to: {root}/data/{DT}')
 
-download_from_kaggle()
+download_from_kaggle(root, DT)
 logger.info(f'Finish downloading Kaggle data. Start downloading API data')
 
-api_handler = APIHandler(yearmonth=DT)
+api_handler = APIHandler(yearmonth=DT, root=root)
 api_handler.download_all_players_data()
 logger.info(f'Finish downloading API data')
