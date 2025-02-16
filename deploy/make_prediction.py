@@ -18,8 +18,8 @@ def get_cat_features(X):
     return cat_features, num_features
 
 
-def get_data_from_team(radiant_team_id, dire_team_id,):
-    data_dict = {'radiant.team_id': radiant_team_id, 'dire.team_id': dire_team_id}
+def get_data_from_team(radiant_team_name, dire_team_name,):
+    data_dict = {'radiant.team_id': radiant_team_name, 'dire.team_id': dire_team_name}
     data_dict['patch'] = 56
     data_dict['']
 
@@ -35,9 +35,8 @@ with mlflow.start_run() as run:
         filter_string=f"tags.mlflow.runName = 'data_preprocessing' and status = 'FINISHED'",
         order_by=["start_time DESC"]
     ).loc[0, 'run_id']
-    with tempfile.TemporaryDirectory() as tmpdir:
-        mlflow.artifacts.download_artifacts(run_id=last_run_id, artifact_path='data/test.csv', dst_path=tmpdir)
-        test = pd.read_csv(os.path.join(tmpdir, 'data/test.csv'))
+
+
 
     # convert to Pool format
     features = [i for i in test.columns if i != 'target']

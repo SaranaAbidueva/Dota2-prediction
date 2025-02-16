@@ -4,3 +4,5 @@ Scripts/catboost_info/*
 Scripts/mlruns/*
 catboost_info/*
 mlruns/*
+.idea
+venv
