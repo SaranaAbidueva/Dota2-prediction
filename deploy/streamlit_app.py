@@ -7,7 +7,7 @@ st.title('Predict Dota 2 Pro league game')
 
 df = pd.read_csv('./deploy/Constants.Heroes.csv')
 df['name_short'] = df['name'].apply(lambda x: x[14:])
-df_teams = pd.read_csv('./data/collected_data.csv')[['radiant.name', 'dire.name']]
+df_teams = pd.read_csv('./deploy/collected_data.csv')[['radiant.name', 'dire.name']]
 teams = pd.unique(df_teams['radiant.name'] + df_teams['dire.name'])
 
 st.selectbox("Radiant team name", teams, key="radiant_name")
