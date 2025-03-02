@@ -10,10 +10,8 @@ def get_cat_features(X):
     hero_columns = []
     for side in ['radiant', 'dire']:
         hero_columns += [f'{side}.{i}_hero' for i in range(1, 6)]
-        hero_columns += [f'{side}.{i}_hero_variant' for i in range(1, 6)]
         hero_columns += [f'{side}.{i}_account_id' for i in range(1, 6)]
-        # hero_columns += [f'{side}.{i}_rank_tier' for i in range(1, 6)]
-    cat_features = ['patch', 'radiant.team_id', 'dire.team_id'] + hero_columns
+    cat_features = ['radiant.team_id', 'dire.team_id', 'patch'] + hero_columns
     cat_features.sort(reverse=True)
     num_features = [x for x in X.columns if x not in cat_features]
     num_features.sort(reverse=True)
@@ -33,7 +31,7 @@ with mlflow.start_run() as run:
     # get last finished run for data preprocessing
     last_run_id = mlflow.search_runs(
         experiment_ids=[experiment_id],
-        filter_string=f"tags.mlflow.runName = 'data_preprocessing' and status = 'FINISHED'",
+        filter_string=f"tags.mlflow.runName = 'transform_data' and status = 'FINISHED'",
         order_by=["start_time DESC"]
     ).loc[0, 'run_id']
     # download train data from last run

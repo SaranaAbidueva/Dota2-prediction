@@ -15,7 +15,7 @@ def to_date(dt):
 
 
 class APIHandler:
-    def __init__(self, yearmonth, primary_url='https://api.opendota.com/api', root='D:\projects\DOTA2 Prediction'):
+    def __init__(self, yearmonth='202501', primary_url='https://api.opendota.com/api', root='D:\projects\DOTA2 Prediction'):
         self.primary_url = primary_url
         self.yearmonth = yearmonth
         self.root = root
@@ -72,5 +72,24 @@ class APIHandler:
                 df.to_csv(f'{self.root}/data/{dt}/player_matches_history2.csv')
                 time.sleep(10)
 
+    def get_live_match(self, radiant_team_name, dire_team_name):
+        req = requests.get(f'{self.primary_url}/live')
+        match_json = req.json()
+        for game in match_json:
+            if game['team_name_radiant'] == radiant_team_name and game['team_name_dire'] == dire_team_name:
+                return game
+
+    def get_current_patch(self):
+        req = requests.get(f'{self.primary_url}/constants/patch')
+        patch_json = req.json()
+        patch_df = pd.DataFrame(patch_json)
+        return max(patch_df['id'])
+
+    def get_current_winrate(self, account_id, hero_id, patch_id):
+        params = {'limit': 1000, 'hero_id': hero_id, 'patch': patch_id} if patch_id \
+            else {'limit': 1000, 'hero_id': hero_id}
+        req = requests.get(f'{self.primary_url}/players/{account_id}/heroes', params=params)
+        wr_json = req.json()[0]
+        return wr_json['games'], wr_json['win']
 
 
